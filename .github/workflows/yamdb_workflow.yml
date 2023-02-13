@@ -6,7 +6,8 @@ name: Yamdb project workflow
 # указываем ветку master
 on:
   push:
-    branches: [ master ]
+    branches: master
+
 
 # третий ключ - это jobs - именованные блоки команд,
 # задачи, которые будут выполняться при запуске workflow
