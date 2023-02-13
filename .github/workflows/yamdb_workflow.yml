@@ -27,8 +27,7 @@ jobs:
 
     # 1-ый шаг клонирование репозитория, для этого используем готовый скрипт
     # указываем этот готовый скрипт в uses
-    - name: Clon Repository
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
     # 2-ой шаг - развертывание окружения Python
     # для этого используем готовый скрипт, указанный в uses
@@ -56,3 +55,8 @@ jobs:
       run: |
         # запуск проверки проекта по flake8
         python -m flake8
+        # перейти в папку, содержащую manage.py -
+        # <корневая папка >/<папка проекта>/manage.py
+        cd api_yamdb/
+        # запустить написанные тесты
+        python manage.py test
