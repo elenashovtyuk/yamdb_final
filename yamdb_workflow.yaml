@@ -19,10 +19,6 @@ jobs:
     # Указываем базовый раннер - создание изолированного окружения
     # с последней версией Ubuntu
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # Run in all these versions of Python
-        python-version: [3.5, 3.6, 3.7, 3.8, 3.9]
     # далее идет ключ steps, под которым мы указываем перечень
     # шагов-команд, которые будут выполнены в этом блоке tests
     steps:
@@ -40,7 +36,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         # выбираем версию Python
-        python-version: 3.8
+        python-version: 3.7
 
     # 3-ий шаг - установка зависимостей
     - name: Install Dependencies
@@ -50,9 +46,9 @@ jobs:
         # обновление pip
         python -m pip install --upgrade pip
         # установка flake8 и его плагинов
-        pip install flake8 pep8-naming flake8-brocken-line flake8-return flacke8-isort
+        pip3 install flake8 pep8-naming flake8-brocken-line flake8-return flacke8-isort
         # установка зависимостей
-        pip install -r api_yamdb/requirements.txt
+        pip3 install -r api_yamdb/requirements.txt
 
     # 4-ый шаг - запуск проверки проекта по flake8 на соответствие стандарту PEP8
     - name: Test With flake8 and django tests
