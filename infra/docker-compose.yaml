@@ -1,42 +1,58 @@
-
+# версия docker-compose
 version: '3.8'
-
+# имена и описания контейнеров, которые должны быть развернуты
 services:
-
+# 1-ый контейнер db.
   db:
+    # образ из которого должен быть запущен контейнер db
+    # этот образ берем из DockerHub
     image: postgres:13.0-alpine
+    # из какой директории и в какое конкретно хранилище переносить данные
     volumes:
       - postgres_database:/var/lib/postgresql/data/
     env_file:
       - ./.env
     # ports:
     #   - 127.0.0.1:5432:5432
-
+# 2-ой контейнер web
   web:
-    build:
-      context: ../
-      dockerfile: api_yamdb/Dockerfile
+    # указываем образ, на основе которого будет запущен контейнер web
+    # у нас этот образ был загружен на DockerHub
+    image: elenashow/yamdb:latest
+    # build:
+    #   context: ../
+    #   dockerfile: api_yamdb/Dockerfile
+
+    # опция restart cо значением always означает, что docker-compose перезапустит контейнер, если тот вдруг остановится
     restart: always
+    # тома static и media и связанные с ними директории в контейнере
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
+    # опция depends_on указывает, когда должен запускаться сервис(контейнер)
+    # в данном случае запуск контейнера web осуществляется после запуска контейнера db
     depends_on:
       - db
+    # адрес файла, где хранятся переменные окружения
     env_file:
       - ./.env
-
+# 3-ий контейнер nginx
   nginx:
+    # запускается на основе образа из DockerHub
     image: nginx:1.21.3-alpine
+    # 'пробрасываем' порт
     ports:
       - "80:80"
+    # указываем тома и связанные с ними директории в контейнере
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - static_value:/var/html/static/
       - media_value:/var/html/media/
-
+    # опция depends_on указывает, когда должен запускаться сервис(контейнер)
+    # в нашем случае после запуска контейнера web
     depends_on:
       - web
-
+# указываем тома
 volumes:
   static_value:
   media_value:
