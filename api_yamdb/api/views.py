@@ -8,29 +8,19 @@ from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
-
 from reviews.models import Category, Genre, Review, Title
 from users.models import User
 
 from .filters import FilterForTitle
 from .mixins import CLDViewSet
-from .permissions import (
-    IsAdminOrReadOnly,
-    IsAuthorOrModeratorOrAdminOrReadOnly,
-    IsSuperUserOrAdmin
-)
-from .serializers import (
-    CategorySerializer,
-    CheckConfirmationCodeSerializer,
-    CommentSerializer,
-    GenreSerializer,
-    ReadOnlyTitleSerializer,
-    ReviewSerializer,
-    ReviewUpdateSerializer,
-    SendCodeSerializer,
-    TitleSerializer,
-    UserSerializer
-)
+from .permissions import (IsAdminOrReadOnly,
+                          IsAuthorOrModeratorOrAdminOrReadOnly,
+                          IsSuperUserOrAdmin)
+from .serializers import (CategorySerializer, CheckConfirmationCodeSerializer,
+                          CommentSerializer, GenreSerializer,
+                          ReadOnlyTitleSerializer, ReviewSerializer,
+                          ReviewUpdateSerializer, SendCodeSerializer,
+                          TitleSerializer, UserSerializer)
 
 
 class CategoryViewSet(CLDViewSet):
