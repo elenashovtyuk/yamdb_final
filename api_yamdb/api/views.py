@@ -180,4 +180,4 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(
                 serializer.data, status=status.HTTP_200_OK
             )
-        # return None
+        return None
