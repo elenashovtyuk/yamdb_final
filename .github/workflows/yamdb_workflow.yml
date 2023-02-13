@@ -1,5 +1,5 @@
 # первый ключ в нашем workflow - name(название workflow)
-name: CI
+name: Yamdb project workflow
 
 # второй ключ - это событие-тригер, после которого сработает workflow
 # в качестве ветки, в которую должен быть сделан push,
