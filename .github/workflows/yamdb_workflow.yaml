@@ -79,7 +79,7 @@ jobs:
         # Проверка доступности репозитория Docker Hub для workflow
         # с помощью uses применяем готовый скрипт-actions для проверки
         # доступности репозитория
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Docker Buildx
         # Вызов сборщика контейнеров docker
         # с помощью uses применяем готовый скрипт-actions для сборки
