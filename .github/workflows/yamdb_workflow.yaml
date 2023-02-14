@@ -54,6 +54,9 @@ jobs:
     # на соответствие стандарту PEP8
     - name: Test With flake8 and django tests
       # в run указываем команды, которые будут выполнены в этом блоке
+      env:
+        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY}}
+
       run: |
         # запуск проверки проекта по flake8
         python -m flake8
