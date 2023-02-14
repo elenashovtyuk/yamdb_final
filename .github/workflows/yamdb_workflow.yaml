@@ -108,6 +108,7 @@ jobs:
     # задача по деплою должна идти после сборки образа
     needs: build_and_push_to_docker_hub
     # шаги, этапы выполнения задач
+    if: github.ref == 'refs/heads/master'
     steps:
     # 1-ый шаг
     - name: executing remote ssh commands to deploy
