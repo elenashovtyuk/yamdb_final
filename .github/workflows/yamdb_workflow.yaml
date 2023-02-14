@@ -79,7 +79,7 @@ jobs:
         # Проверка доступности репозитория Docker Hub для workflow
         # с помощью uses применяем готовый скрипт-actions для проверки
         # доступности репозитория
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Set up Docker Buildx
         # Вызов сборщика контейнеров docker
         # с помощью uses применяем готовый скрипт-actions для сборки
@@ -96,7 +96,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/infra_actions:latest
+          context: ./api_yamdb/
+          tags: ${{ secrets.DOCKER_USERNAME }}/api_yamdb:latest
 
   # 3-я задача - deploy
   deploy:
