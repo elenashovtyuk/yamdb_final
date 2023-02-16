@@ -18,7 +18,7 @@ services:
   web:
     # указываем образ, на основе которого будет запущен контейнер web
     # у нас этот образ был загружен на DockerHub
-    image: elenashow/yamdb:latest
+    image: elenashow/yamdb:v1.01.2023
     # build:
     #   context: ../
     #   dockerfile: api_yamdb/Dockerfile
