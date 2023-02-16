@@ -164,7 +164,7 @@ docker compose exec web python manage.py dumpdata > fixtures.json
 
 http://158.160.27.206/api/v1/
 
-## Документация API Yamdb доступна по ссылке
+### Документация API Yamdb доступна по ссылке
 
 http://158.160.27.206/redoc/
 
