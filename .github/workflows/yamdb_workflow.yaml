@@ -1,49 +1,21 @@
-# первый ключ в нашем workflow - name(название workflow)
 name: Yamdb project workflow
 
-# второй ключ - это событие-тригер, после которого сработает workflow
-# в качестве ветки, в которую должен быть сделан push,
-# указываем ветку master
 on: [push]
 
-
-
-# третий ключ - это jobs - именованные блоки команд,
-# задачи, которые будут выполняться при запуске workflow
-# все jobs запускаюся в изолированном окружении
 jobs:
-  # первая задача - проверка кода на соответствие стандартам PEP8
-  # и запуск pytest из репозитория yamdb_final
+
   tests:
-    # Указываем базовый раннер - создание изолированного окружения
-    # с последней версией Ubuntu
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.7", "3.8", "3.9"]
-    # далее идет ключ steps, под которым мы указываем перечень
-    # шагов-команд, которые будут выполнены в этом блоке tests
     steps:
-    # все шаги указываем, начиная с символа "-"
-    # каждому шагу можно задать имя, чтобы понимать, что происходит
-    # на каждом шаге и упростить поиск ошибок
-
-    # 1-ый шаг клонирование репозитория, для этого используем готовый скрипт
-    # указываем этот готовый скрипт в uses
     - uses: actions/checkout@v2
-
-    # 2-ой шаг - развертывание окружения Python
-    # для этого используем готовый скрипт, указанный в uses
     - name: Set Up Python
       uses: actions/setup-python@v2
       with:
-        # выбираем версию Python
         python-version: 3.7
-
-    # 3-ий шаг - установка зависимостей
     - name: Install Dependencies
-      # в run указываем команды, которые будут выполнены в терминале окружения
-      # либо вместо run можно использовать uses для вызова actions (готовые скрипты)
       run: |
         # обновление pip
         python -m pip install --upgrade pip
@@ -51,76 +23,46 @@ jobs:
         pip3 install flake8 pep8-naming flake8-broken-line flake8-return flake8-isort
         # установка зависимостей
         pip3 install -r api_yamdb/requirements.txt
-
-    # 4-ый шаг - запуск проверки проекта по flake8
-    # на соответствие стандарту PEP8
     - name: Test With flake8 and django tests
-      # в run указываем команды, которые будут выполнены в этом блоке
       env:
         DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY}}
-
       run: |
         # запуск проверки проекта по flake8
         python -m flake8
         pytest
 
-  # вторая задача - сборка и доставка образа на DockerHub
   build_and_push_to_docker_hub:
-    # название задачи
     name: Push Docker image to Docker Hub
-    # Указываем базовый раннер - создание изолированного окружения
-    # с последней версией Ubuntu
     runs-on: ubuntu-latest
-    # чтобы определить последовательность запуска задач
-    # применяем ключ needs
-    # уточняем, что запуск данной задачи должен осуществляться после
-    # завершения задачи tests
     needs: tests
-    # дальше идут шаги, этапы выполнения задачи
     steps:
       - name: Check out the repo
-        # Проверка доступности репозитория Docker Hub для workflow
-        # с помощью uses применяем готовый скрипт-actions для проверки
-        # доступности репозитория
         uses: actions/checkout@v2
       - name: Set up Docker Buildx
-        # Вызов сборщика контейнеров docker
-        # с помощью uses применяем готовый скрипт-actions для сборки
-        # контейнеров
         uses: docker/setup-buildx-action@v1
       - name: Login to Docker
-        # с помощью uses запускаем скрипт-actions авторизации на Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push to Docker Hub
-        # Пуш образа в Docker Hub с помощью готового скрипта-actions
         uses: docker/build-push-action@v2
         with:
           push: true
           context: ./api_yamdb/
           tags: ${{ secrets.DOCKER_USERNAME }}/yamdb:v1.01.2023
 
-  # 3-я задача - deploy
   deploy:
-    # Указываем базовый раннер - создание изолированного окружения
-    # с последней версией Ubuntu
     runs-on: ubuntu-latest
-    # последовательность выполнения задач задаем с помощью needs
-    # задача по деплою должна идти после сборки образа
     needs: build_and_push_to_docker_hub
-    # шаги, этапы выполнения задач
     if: github.ref == 'refs/heads/master'
     steps:
-    # 1-ый шаг
     - name: executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST_YANDEX_CLOUD }}
         username: ${{ secrets.USER_YANDEX_CLOUD }}
         key: ${{ secrets.SSH_KEY }}
-        # passphrase: ${{ secrets.PASSPHRASE }} # Если ваш ssh-ключ защищён фразой-паролем
         script: |
           sudo docker compose stop
           sudo docker compose rm web
@@ -133,8 +75,6 @@ jobs:
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
           sudo docker compose up -d
 
-# отправка сообщений в телеграмм-бот
-# о результате workflow
   send_message:
     runs-on: ubuntu-latest
     needs: deploy
