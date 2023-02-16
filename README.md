@@ -73,7 +73,7 @@ chmod +x /usr/local/bin/docker-compose
 
 ### Отредактируем конфигурационный файл infra/nginx/default.conf - в строке server_name укажем публичный IP своего сервера
 
-### Отредактируем файл settings.py - добавим в ALLOWED_HOST публичный IP своего сервера
+### Отредактируем файл settings.py - добавим в ALLOWED_HOST публичный IP своего сервера или доменное имя
 
 ### Скопируем файл docker-compose.yaml на сервер.
 
@@ -125,10 +125,10 @@ TELEGRAM_TOKEN=<токен вашего бота>
 
 Workflow состоит из четырех шагов:
 
-- Проверка кода на соответствие стандарту PEP8
-- Сборка и доставка образа на Docker Hub
-- Автоматический деплой на удаленный сервер
-- Отправка отчета в Telegram-чат о результате выполнения задач workflow
+- tests: Проверка кода на соответствие стандарту PEP8
+- build_and_push_to_docker_hub: Сборка и доставка образа на Docker Hub
+- deploy: Автоматический деплой на удаленный сервер
+- send_message: Отправка отчета в Telegram-чат о результате выполнения задач workflow
 
 ### Соберем и запустим контейнеры на сервере
 
@@ -152,12 +152,6 @@ docker compose exec web python manage.py createsuperuser
 
 ```
 docker compose exec web python manage.py collectstatic --no-input
-```
-
-### Создаем дамп (резервную копию) базы данных
-
-```
-docker compose exec web python manage.py dumpdata > fixtures.json
 ```
 
 ### Проект Yamdb доступен по ссылке
