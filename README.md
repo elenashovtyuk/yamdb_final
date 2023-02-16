@@ -91,13 +91,13 @@ scp default.conf <username>@<host>:/home/<username>/nginx/
 
 ### Cоздадим и заполним файл .env по следующему шаблону:
 
-DB_ENGINE=django.db.backends.postgresql
-DB_NAME=postgres
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-DB_HOST=db
-DB_PORT=5432
-DJANGO_SECRET_KEY=<секретный ключ проекта django>
+ - DB_ENGINE=django.db.backends.postgresql
+ - DB_NAME=postgres
+ - POSTGRES_USER=postgres
+ - POSTGRES_PASSWORD=postgres
+ - DB_HOST=db
+ - DB_PORT=5432
+ - DJANGO_SECRET_KEY=<секретный ключ проекта django>
 
 ### Для работы с workflow добавим в Secrets GitHub следующие переменные окружения:
 
